@@ -266,7 +266,7 @@ export async function POST(request: Request) {
             const contribRef = adminDb.collection('tree_contributions').doc();
 
             // Build document data, excluding undefined values
-            const docData: any = {
+            const docData: Record<string, unknown> = {
                 districtId,
                 districtName,
                 state,
@@ -320,10 +320,10 @@ export async function POST(request: Request) {
             );
         }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error submitting tree contribution:', error);
-        const errorMessage = error?.message || 'Unknown error occurred';
-        const errorStack = error?.stack || '';
+        const errorMessage = (error as Error)?.message || 'Unknown error occurred';
+        const errorStack = (error as Error)?.stack || '';
         console.error('Error details:', { errorMessage, errorStack });
         return NextResponse.json(
             {

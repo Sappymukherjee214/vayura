@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
         const allDistricts = snapshot.docs.map((doc) => ({
             id: doc.id,
-            ...(doc.data() as any),
+            ...(doc.data() as Record<string, unknown>),
         })) as DistrictSearchResult[];
 
         const filtered = allDistricts

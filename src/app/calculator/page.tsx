@@ -66,13 +66,39 @@ export default function CalculatorPage() {
                         <div className="p-8 bg-gray-50/30 border-b border-gray-100">
                             {/* Value Display */}
                             <div className="flex flex-col items-center mb-8">
-                                <label className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
+                                <label htmlFor="calc-trees" className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
                                     Trees Planted
                                 </label>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-6xl font-bold text-gray-900 tracking-tight">
-                                        {trees.toLocaleString()}
-                                    </span>
+                                <div className="flex items-baseline gap-2 justify-center">
+                                    <input
+                                        id="calc-trees"
+                                        name="trees"
+                                        type="number"
+                                        min="1"
+                                        max="10000"
+                                        value={trees}
+                                        autoComplete="off"
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            // Allow empty string purely for typing experience, but otherwise parse
+                                            if (val === '') {
+                                                setTrees(0); // Temporary state for empty input
+                                                return;
+                                            }
+                                            const num = parseInt(val);
+                                            if (!isNaN(num)) {
+                                                setTrees(num);
+                                            }
+                                        }}
+                                        onBlur={() => {
+                                            // Clamp on blur
+                                            let final = Math.max(1, Math.min(10000, trees));
+                                            if (trees === 0) final = 1; // Handle empty/zero case
+                                            setTrees(final);
+                                        }}
+                                        className="text-6xl font-bold text-gray-900 tracking-tight bg-transparent text-center w-48 sm:w-64 border-b-2 border-transparent hover:border-gray-200 focus:border-green-500 focus:outline-none transition-all placeholder-gray-200 appearance-none m-0 p-0 leading-none"
+                                        style={{ MozAppearance: 'textfield' }} // Remove spin buttons Firefox
+                                    />
                                     <span className="text-xl text-gray-500 font-medium">trees</span>
                                 </div>
                             </div>
@@ -82,7 +108,7 @@ export default function CalculatorPage() {
                                 <div className="flex items-center gap-6 mb-8">
                                     <button
                                         onClick={() => setTrees(Math.max(1, trees - 10))}
-                                        className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
+                                        className="w-10 h-10 shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
                                         aria-label="Decrease"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,6 +118,8 @@ export default function CalculatorPage() {
 
                                     <div className="flex-1">
                                         <input
+                                            id="calc-trees-range"
+                                            name="treesRange"
                                             type="range"
                                             min="1"
                                             max="10000"
@@ -103,7 +131,7 @@ export default function CalculatorPage() {
 
                                     <button
                                         onClick={() => setTrees(Math.min(10000, trees + 10))}
-                                        className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
+                                        className="w-10 h-10 shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
                                         aria-label="Increase"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,8 +146,8 @@ export default function CalculatorPage() {
                                             key={preset}
                                             onClick={() => setTrees(preset)}
                                             className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all border ${trees === preset
-                                                    ? 'bg-green-600 text-white border-green-600 shadow-sm'
-                                                    : 'bg-white text-gray-600 border-gray-200 hover:border-green-300 hover:text-green-700'
+                                                ? 'bg-green-600 text-white border-green-600 shadow-sm'
+                                                : 'bg-white text-gray-600 border-gray-200 hover:border-green-300 hover:text-green-700'
                                                 }`}
                                         >
                                             {preset.toLocaleString()}
@@ -143,7 +171,7 @@ export default function CalculatorPage() {
                                     kg CO₂ per year
                                 </div>
                                 <div className="text-sm text-green-600 mt-2">
-                                    That's {(animatedCO2 / 1000).toFixed(2)} tonnes of carbon dioxide!
+                                    That&apos;s {(animatedCO2 / 1000).toFixed(2)} tonnes of carbon dioxide!
                                 </div>
                             </div>
 
@@ -275,6 +303,12 @@ export default function CalculatorPage() {
                     border-radius: 50%;
                     cursor: pointer;
                     border: none;
+                }
+                /* Remove spinner buttons from number input */
+                input[type=number]::-webkit-inner-spin-button, 
+                input[type=number]::-webkit-outer-spin-button { 
+                    -webkit-appearance: none; 
+                    margin: 0; 
                 }
             `}</style>
         </>

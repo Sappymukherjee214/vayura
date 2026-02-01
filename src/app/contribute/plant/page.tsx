@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Header } from '@/components/ui/header';
 import { useAuth } from '@/lib/auth-context';
 import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib/utils/storage';
@@ -83,8 +84,8 @@ function PlantContributionForm() {
             if (previewUrl) revokeImagePreview(previewUrl);
             setPreviewUrl(null);
             setNotes('');
-        } catch (err: any) {
-            setError(err.message || 'Failed to submit contribution');
+        } catch (err: unknown) {
+            setError((err as Error).message || 'Failed to submit contribution');
         } finally {
             setSubmitting(false);
         }
@@ -113,13 +114,16 @@ function PlantContributionForm() {
                         className="bg-white rounded-2xl shadow px-6 py-6 border border-gray-100 space-y-5"
                     >
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="contribute-district" className="block text-sm font-medium text-gray-700 mb-1">
                                 District
                             </label>
                             <input
+                                id="contribute-district"
+                                name="district"
                                 type="text"
                                 value={districtName || districtId}
                                 readOnly
+                                autoComplete="off"
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 text-sm"
                             />
                             {!districtId && (
@@ -131,10 +135,12 @@ function PlantContributionForm() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="contribute-photo" className="block text-sm font-medium text-gray-700 mb-2">
                                 Tree photo (JPEG/PNG)
                             </label>
                             <input
+                                id="contribute-photo"
+                                name="photo"
                                 type="file"
                                 accept="image/jpeg,image/png,image/webp"
                                 onChange={handleImageChange}
@@ -143,9 +149,11 @@ function PlantContributionForm() {
                             {previewUrl && (
                                 <div className="mt-3">
                                     <p className="text-xs text-gray-500 mb-1">Preview</p>
-                                    <img
+                                    <Image
                                         src={previewUrl}
                                         alt="Tree preview"
+                                        width={400}
+                                        height={300}
                                         className="rounded-xl border border-gray-200 max-h-64 object-cover"
                                     />
                                 </div>
@@ -234,5 +242,3 @@ export default function PlantContributionPage() {
         </>
     );
 }
-
-

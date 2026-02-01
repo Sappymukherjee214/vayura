@@ -66,7 +66,7 @@ export async function GET(request: Request) {
         const districts = districtsSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
-        } as any));
+        } as Record<string, unknown> & { id: string }));
 
         const leaderboardMap = new Map();
         leaderboardSnapshot.docs.forEach(doc => {
@@ -148,7 +148,7 @@ export async function GET(request: Request) {
         });
 
         // 3. Calculate Metrics and Ranks
-        const stateMetrics: any[] = [];
+        const stateMetrics: Record<string, unknown>[] = [];
         let globalTotalTrees = 0;
         let globalTotalOxygen = 0;
 

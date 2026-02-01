@@ -21,9 +21,9 @@ export async function GET(request: Request) {
             .map(doc => ({
                 id: doc.id,
                 ...doc.data()
-            } as any))
+            } as Record<string, unknown>))
             // Filter out invalid entries without state names
-            .filter((entry: any) => entry.state && entry.state.trim().length > 0);
+            .filter((entry: Record<string, unknown>) => entry.state && typeof entry.state === 'string' && entry.state.trim().length > 0);
 
         return NextResponse.json(leaderboard, {
             headers: {

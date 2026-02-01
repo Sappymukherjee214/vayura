@@ -34,14 +34,11 @@ const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
 
 export function DistrictSearch({
   onDistrictSelect,
-  districtNotFound,
-  notFoundDistrictName,
   loadingDistrict,
 }: DistrictSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<DistrictSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1); // For keyboard nav
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,7 +61,6 @@ export function DistrictSearch({
 
     const fetchResults = async () => {
       setLoading(true);
-      setError(null);
       try {
         const data = await apiClient<DistrictSearchResult[]>(
           `/api/districts?q=${encodeURIComponent(debouncedQuery)}`
@@ -73,9 +69,9 @@ export function DistrictSearch({
           setResults(data);
           setShowDropdown(true);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!isCancelled) {
-          setError(err.message || "Failed to search districts");
+          console.error('Search error:', err);
         }
       } finally {
         if (!isCancelled) setLoading(false);
@@ -209,7 +205,7 @@ export function DistrictSearch({
                 </div>
                 <h3 className="text-gray-900 font-medium mb-1">No districts found</h3>
                 <p className="text-sm text-gray-500 mb-3">
-                  We couldn't find "{debouncedQuery}".
+                  We couldn&apos;t find &quot;{debouncedQuery}&quot;.
                 </p>
                 <a
                   href="https://github.com/manasdutta04/vayura"

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from './auth-modal';
@@ -17,9 +18,13 @@ export function Header() {
                 <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        <img
+                        <Image
                             src="/logo.png"
                             alt="Vayura"
+                            width={40}
+                            height={40}
+                            loading="eager"
+                            priority
                             className="h-10 w-auto"
                         />
                         <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
@@ -109,9 +114,11 @@ export function Header() {
                                         className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
                                     >
                                         {user.photoURL ? (
-                                            <img
+                                            <Image
                                                 src={user.photoURL}
                                                 alt={user.displayName || 'User'}
+                                                width={32}
+                                                height={32}
                                                 className="w-8 h-8 rounded-full"
                                             />
                                         ) : (
